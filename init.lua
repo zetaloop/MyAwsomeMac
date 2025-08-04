@@ -191,9 +191,14 @@ Watchers.ctrlRTap = hs.eventtap.new({ types.keyDown }, function(e)
         return false
     end
 
-    local frontApp = hs.application.frontmostApplication()
+    local focusedApp = hs.application.frontmostApplication()
+    -- 终端内忽略
+    if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
+        hs.alert.show("Ctrl+B", 0.3)
+        return false
+    end
     -- 如果当前是访达，则在新终端中打开其路径
-    if frontApp and frontApp:bundleID() == "com.apple.finder" then
+    if focusedApp and focusedApp:bundleID() == "com.apple.finder" then
         hs.osascript.applescript([[
             tell application "Finder"
                 set dirPath to POSIX path of (target of front window as alias)
@@ -221,6 +226,12 @@ Watchers.ctrlETap = hs.eventtap.new({ types.keyDown }, function(e)
         return false
     end
     if suppressCtrlAE then return false end -- 防止与 Home/End -> Ctrl+A/E 冲突
+    local focusedApp = hs.application.frontmostApplication()
+    -- 终端内忽略
+    if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
+        hs.alert.show("Ctrl+E", 0.3)
+        return false
+    end
     hs.osascript.applescript([[
         tell application "Finder"
             activate
@@ -235,6 +246,12 @@ end):start()
 local keyI = hs.keycodes.map["i"]
 Watchers.ctrlITap = hs.eventtap.new({ types.keyDown }, function(e)
     if e:getKeyCode() ~= keyI or not e:getFlags():containExactly({ "ctrl" }) then
+        return false
+    end
+    local focusedApp = hs.application.frontmostApplication()
+    -- 终端内忽略
+    if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
+        hs.alert.show("Ctrl+I", 0.3)
         return false
     end
     if not (hs.application.launchOrFocus("System Settings")
@@ -252,6 +269,11 @@ Watchers.ctrlXTap = hs.eventtap.new({ types.keyDown }, function(e)
         return false
     end
     local focusedApp = hs.application.frontmostApplication()
+    -- 终端内忽略
+    if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
+        hs.alert.show("Ctrl+X", 0.3)
+        return false
+    end
     if focusedApp and focusedApp:name() == "ChatGPT" then
         hs.eventtap.keyStroke({ "cmd" }, "q")
     else
@@ -268,6 +290,12 @@ end):start()
 local keyD = hs.keycodes.map["d"]
 Watchers.ctrlDTap = hs.eventtap.new({ types.keyDown }, function(e)
     if e:getKeyCode() ~= keyD or not e:getFlags():containExactly({ "ctrl" }) then
+        return false
+    end
+    local focusedApp = hs.application.frontmostApplication()
+    -- 终端内忽略
+    if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
+        hs.alert.show("Ctrl+D", 0.3)
         return false
     end
     hs.alert.show("Reload Deskflow & Hammerspoon")
