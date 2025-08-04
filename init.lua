@@ -269,10 +269,6 @@ Watchers.ctrlXTap = hs.eventtap.new({ types.keyDown }, function(e)
         return false
     end
     local focusedApp = hs.application.frontmostApplication()
-    -- VSCode 中禁用，否则就没有中断 ctrl+c 了
-    if focusedApp and focusedApp:bundleID() == "com.microsoft.VSCode" then
-        return false
-    end
     if focusedApp and focusedApp:name() == "ChatGPT" then
         hs.eventtap.keyStroke({ "cmd" }, "q")
     else
