@@ -1,0 +1,2 @@
+# MyAwsomeMac
+Hammerspoon Script
