@@ -207,12 +207,26 @@ Watchers.ctrlRTap = hs.eventtap.new({ types.keyDown }, function(e)
     if e:getKeyCode() ~= keyR or not e:getFlags():containExactly({ "ctrl" }) then
         return false
     end
-    hs.osascript.applescript([[
-        tell application "Terminal"
-            activate
-            do script ""
-        end tell
-    ]])
+
+    local frontApp = hs.application.frontmostApplication()
+    -- 如果当前是访达，则在新终端中打开其路径
+    if frontApp and frontApp:bundleID() == "com.apple.finder" then
+        hs.osascript.applescript([[
+            tell application "Finder"
+                set dirPath to POSIX path of (target of front window as alias)
+            end tell
+            do shell script "open -a Terminal " & quoted form of dirPath
+        ]])
+    else
+        -- 否则，仅打开新终端
+        hs.osascript.applescript([[
+            tell application "Terminal"
+                activate
+                do script ""
+            end tell
+        ]])
+    end
+
     SingleWinFlag = false
     return true -- 拦截事件
 end):start()
