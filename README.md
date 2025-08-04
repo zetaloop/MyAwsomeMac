@@ -1,6 +1,11 @@
 # My Awesome macOS Customization
 
+## Deskflow
+[deskflow/deskflow](https://github.com/deskflow/deskflow)
+我用 Windows 笔记本控制 Mac Mini。
+
 ## Hammerspoon
+[Hammerspoon/hammerspoon](https://github.com/Hammerspoon/hammerspoon) 
 - `init.lua`
 
 ## 快捷指令
