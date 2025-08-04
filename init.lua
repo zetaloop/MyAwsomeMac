@@ -103,23 +103,6 @@ Watchers.cmdCopyTap = hs.eventtap.new({ types.keyDown, types.keyUp }, function(e
     end
 end):start()
 
--- Win+B 显示当前活跃应用的 bundleID
-local keyB = hs.keycodes.map["b"]
-
-Watchers.ctrlBTap = hs.eventtap.new({ types.keyDown }, function(e)
-    -- Win(⌃) + B：其它修饰键或非 B 均不处理
-    if e:getKeyCode() ~= keyB or not e:getFlags():containExactly({ "ctrl" }) then
-        return false
-    end
-
-    -- 获取并展示前台应用 bundleID
-    local app = hs.application.frontmostApplication()
-    local id  = app and app:bundleID() or "未知 bundleID"
-    hs.alert.show(id, 1)  -- 屏幕中央浮窗 1 秒
-    SingleWinFlag = false -- 维持你原有逻辑
-    return true           -- 拦截按键，防止传递给应用
-end):start()
-
 
 -- Ctrl+Space ⇄ Cmd+Space
 local keySpace = hs.keycodes.map["space"]
@@ -294,6 +277,25 @@ Watchers.ctrlDTap = hs.eventtap.new({ types.keyDown }, function(e)
         ]])
         hs.timer.doAfter(0.1, hs.reload)
     end)
+    SingleWinFlag = false
+    return true
+end):start()
+
+-- Win+B 显示当前活跃应用的 bundleID
+local keyB = hs.keycodes.map["b"]
+Watchers.ctrlBTap = hs.eventtap.new({ types.keyDown }, function(e)
+    if e:getKeyCode() ~= keyB or not e:getFlags():containExactly({ "ctrl" }) then
+        return false
+    end
+    -- 获取并展示前台应用 bundleID
+    local focusedApp = hs.application.frontmostApplication()
+    local id         = focusedApp and focusedApp:bundleID() or "未知 bundleID"
+    -- 终端内忽略
+    if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
+        hs.alert.show("Ctrl+B", 0.3)
+        return false
+    end
+    hs.alert.show(id, 1)
     SingleWinFlag = false
     return true
 end):start()
