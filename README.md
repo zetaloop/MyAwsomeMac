@@ -1,12 +1,10 @@
 # My Awesome macOS Customization
 
-## Deskflow
-[deskflow/deskflow](https://github.com/deskflow/deskflow)<br>
+## Deskflow <kbd>[deskflow/deskflow](https://github.com/deskflow/deskflow)</kbd>
 我用 Windows 笔记本控制 Mac Mini。
 
-## Hammerspoon
-[Hammerspoon/hammerspoon](https://github.com/Hammerspoon/hammerspoon) <br>
-- `init.lua`
+## Hammerspoon <kbd>[Hammerspoon/hammerspoon](https://github.com/Hammerspoon/hammerspoon)</kbd>
+- [`init.lua`](./init.lua)
 
 ## 快捷指令
 **使用方法**：制作快捷指令 - 右键快捷指令 - 添加到程序坞 - 右键程序坞里的应用 - 在访达中显示 - 按住 Cmd 拖到访达顶上 - 从程序坞中移除
