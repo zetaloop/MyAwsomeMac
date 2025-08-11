@@ -18,7 +18,9 @@ Watchers.cmdTap = hs.eventtap.new(
                 -- 在 ctrl 松开且之前未被取消时触发
             elseif flags:containExactly({}) and WinPressed then
                 if SingleWinFlag then
-                    hs.eventtap.keyStroke({ "ctrl", "fn" }, "F3")
+                    -- hs.eventtap.keyStroke({ "ctrl", "fn" }, "F3")
+                    -- 改为启动 启动台
+                    hs.application.launchOrFocus("Launchpad")
                 end
                 WinPressed = false
                 -- 其它任何修饰键变化（如按下或松开其他修饰键）都取消资格
@@ -324,6 +326,53 @@ Watchers.ctrlBTap = hs.eventtap.new({ types.keyDown }, function(e)
         return false
     end
     hs.alert.show(id, 1)
+    SingleWinFlag = false
+    return true
+end):start()
+
+-- Ctrl + 中键 取词（Textify）
+local ax, mouse = require("hs.axuielement"), require("hs.mouse")
+
+local function _getTextUnderMouse()
+    local pt  = mouse.getAbsolutePosition()
+    local sys = ax.systemWideElement()
+    local el  = sys and sys:elementAtPosition(pt.x, pt.y)
+    if not el then return nil end
+
+    local function get(attr)
+        local ok, v = pcall(function() return el:attributeValue(attr) end)
+        return ok and type(v) == "string" and #v > 0 and v or nil
+    end
+
+    -- 优先级：选中文本 > 值 > 标题 > 描述/帮助/占位 > 值描述
+    local order = { "AXSelectedText", "AXValue", "AXTitle", "AXDescription", "AXHelp", "AXPlaceholderValue",
+        "AXValueDescription" }
+    for _, a in ipairs(order) do
+        local v = get(a)
+        if v then return (v:gsub("%s+$", ""):gsub("^%s+", "")) end
+    end
+    if (get("AXRole") == "AXStaticText") then
+        local v = get("AXValue")
+        if v then return (v:gsub("%s+$", ""):gsub("^%s+", "")) end
+    end
+    return nil
+end
+Watchers.pickTextTap = hs.eventtap.new({ types.otherMouseDown }, function(e)
+    local flags = e:getFlags()
+    if not (flags:containExactly({ "cmd" })) then
+        return false
+    end
+    local btn = e:getProperty(hs.eventtap.event.properties.mouseEventButtonNumber)
+    if btn ~= 2 then return false end
+
+    local text = _getTextUnderMouse()
+    SingleWinFlag = false
+    if text and #text > 0 then
+        hs.pasteboard.setContents(text)
+        hs.alert.show(text)
+    else
+        hs.alert.show("未发现可读文本属性")
+    end
     SingleWinFlag = false
     return true
 end):start()
