@@ -196,7 +196,7 @@ Watchers.ctrlRTap = hs.eventtap.new({ types.keyDown }, function(e)
     local focusedApp = hs.application.frontmostApplication()
     -- 终端内忽略
     if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
-        hs.alert.show("Ctrl+B", 0.3)
+        hs.alert.show("Ctrl+R", 0.3)
         return false
     end
     -- 如果当前是访达，则在新终端中打开其路径
