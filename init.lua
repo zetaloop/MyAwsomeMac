@@ -420,9 +420,7 @@ end):start()
 
 -- 松开所有修饰键避免卡住
 hs.timer.doAfter(0, function()
-    -- 用 flagsChanged 清空全部修饰键
-    hs.eventtap.event.newFlagsChangedEvent({}):post()
-    -- 逐个发送 keyUp 以彻底确保释放
+    -- 左/右 ⌘(55,54), ⌃(59,62), ⌥(58,61), ⇧(56,60), Fn(63)
     for _, kc in ipairs({ 55, 54, 59, 62, 58, 61, 56, 60, 63 }) do
         hs.eventtap.event.newKeyEvent({}, kc, false):post()
     end
