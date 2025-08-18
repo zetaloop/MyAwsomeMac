@@ -354,7 +354,7 @@ Watchers.ctrlBTap = hs.eventtap.new({ types.keyDown }, function(e)
     return true
 end):start()
 
--- Ctrl + 中键 取词（Textify）
+-- Ctrl+中键 取词（Textify）
 local ax, mouse = require("hs.axuielement"), require("hs.mouse")
 
 local function _getTextUnderMouse()
