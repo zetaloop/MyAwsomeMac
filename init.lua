@@ -105,7 +105,6 @@ Watchers.cmdCopyTap = hs.eventtap.new({ types.keyDown, types.keyUp }, function(e
     end
 end):start()
 
-
 -- Ctrl+Space ⇄ Cmd+Space
 local keySpace = hs.keycodes.map["space"]
 local swapSpaceTap
@@ -126,6 +125,31 @@ swapSpaceTap = hs.eventtap.new({ types.keyDown, types.keyUp }, function(e)
         swapSpaceTap:stop()
         hs.eventtap.event.newKeyEvent({ "ctrl" }, "space", isDown):post()
         swapSpaceTap:start()
+        return true
+    end
+    return false
+end):start()
+
+-- Ctrl+` ⇄ Cmd+`
+local keyBacktick = hs.keycodes.map["`"]
+local swapBacktickTap
+swapBacktickTap = hs.eventtap.new({ types.keyDown, types.keyUp }, function(e)
+    if e:getKeyCode() ~= keyBacktick then return false end
+
+    local isDown = (e:getType() == types.keyDown)
+    local flags  = e:getFlags()
+
+    if flags:containExactly({ "ctrl" }) then -- ⌃ ` → ⌘ `
+        SingleWinFlag = false
+        swapBacktickTap:stop()
+        hs.eventtap.event.newKeyEvent({ "cmd" }, "`", isDown):post()
+        swapBacktickTap:start()
+        return true
+    elseif flags:containExactly({ "cmd" }) then -- ⌘ ` → ⌃ `
+        SingleWinFlag = false
+        swapBacktickTap:stop()
+        hs.eventtap.event.newKeyEvent({ "ctrl" }, "`", isDown):post()
+        swapBacktickTap:start()
         return true
     end
     return false
