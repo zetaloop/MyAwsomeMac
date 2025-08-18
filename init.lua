@@ -288,23 +288,26 @@ Watchers.ctrlITap = hs.eventtap.new({ types.keyDown }, function(e)
     return true
 end):start()
 
--- Win+X 打开ChatGPT
-local keyX = hs.keycodes.map["x"]
-Watchers.ctrlXTap = hs.eventtap.new({ types.keyDown }, function(e)
-    if e:getKeyCode() ~= keyX or not e:getFlags():containExactly({ "ctrl" }) then
+-- Win+C 打开 ChatGPT
+Watchers.ctrlCTap = hs.eventtap.new({ types.keyDown }, function(e)
+    if e:getKeyCode() ~= keyC or not e:getFlags():containExactly({ "ctrl" }) then
+        return false
+    end
+    -- 忽略由本脚本合成的事件
+    local srcPID = e:getProperty(hs.eventtap.event.properties.eventSourceUnixProcessID)
+    if srcPID and srcPID == hs.processInfo.processID then
         return false
     end
     local focusedApp = hs.application.frontmostApplication()
     -- 终端内忽略
     if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
-        hs.alert.show("Ctrl+X", 0.3)
+        hs.alert.show("Ctrl+C", 0.3)
         return false
     end
     if focusedApp and focusedApp:name() == "ChatGPT" then
         hs.eventtap.keyStroke({ "cmd" }, "q")
     else
-        if not (hs.application.launchOrFocus("ChatGPT")
-                or hs.application.launchOrFocus("ChatGPT")) then
+        if not hs.application.launchOrFocus("ChatGPT") then
             hs.alert.show("无法打开ChatGPT")
         end
     end
