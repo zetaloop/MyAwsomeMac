@@ -46,15 +46,32 @@ tell application "Finder"
 
 	set theItem to item 1 of sel
 	set appPath to POSIX path of (theItem as alias)
+	set isRegularFile to ((do shell script "test -f " & quoted form of appPath & " && echo 1 || echo 0") = "1")
 	try
-		do shell script "xattr -rd com.apple.quarantine " & quoted form of appPath
-		display dialog "xattr -rd com.apple.quarantine " & (name of theItem) & "
+		if isRegularFile then
+			do shell script "xattr -rd com.apple.quarantine " & quoted form of appPath
+			do shell script "chmod +x " & quoted form of appPath
+			display dialog "xattr -rd com.apple.quarantine " & (name of theItem) & "
+chmod +x " & (name of theItem) & "
+
+如上，已移除不受信任来源标记并予以执行。" buttons {"谢谢"} default button 1
+		else
+			do shell script "xattr -rd com.apple.quarantine " & quoted form of appPath
+			display dialog "xattr -rd com.apple.quarantine " & (name of theItem) & "
 
 如上，已移除不受信任来源标记。" buttons {"谢谢"} default button 1
+		end if
 	on error errMsg
-		display dialog "xattr -rd com.apple.quarantine " & (name of theItem) & "
+		if isRegularFile then
+			display dialog "xattr -rd com.apple.quarantine " & (name of theItem) & "
+chmod +x " & (name of theItem) & "
 
 发生错误：" & errMsg buttons {"坏耶"} default button 1
+		else
+			display dialog "xattr -rd com.apple.quarantine " & (name of theItem) & "
+
+发生错误：" & errMsg buttons {"坏耶"} default button 1
+		end if
 	end try
 end tell
 ```
