@@ -416,7 +416,7 @@ Watchers.shiftSpaceTap = hs.eventtap.new({ types.keyDown }, function(e)
         hs.timer.doAfter(0, function() hs.eventtap.keyStrokes("好") end)
         hs.timer.doAfter(0.01, function() hs.eventtap.keyStroke({}, "l") end)
         hs.timer.doAfter(0.02, function() hs.eventtap.keyStroke({}, "space") end)
-        hs.timer.doAfter(0.5, function() hs.eventtap.keyStroke({}, "escape") end)
+        hs.timer.doAfter(0.3, function() hs.eventtap.keyStroke({}, "escape") end)
     end
     SingleWinFlag = false
     return false
