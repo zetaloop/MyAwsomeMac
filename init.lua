@@ -218,11 +218,11 @@ Watchers.ctrlRTap = hs.eventtap.new({ types.keyDown }, function(e)
     end
 
     local focusedApp = hs.application.frontmostApplication()
-    -- 终端内忽略
-    if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
-        hs.alert.show("Ctrl+R", 0.3)
-        return false
-    end
+    -- -- 终端内忽略
+    -- if focusedApp and focusedApp:bundleID() == "com.apple.Terminal" then
+    --     hs.alert.show("Ctrl+R", 0.3)
+    --     return false
+    -- end
     -- 如果当前是访达，则在新终端中打开其路径
     if focusedApp and focusedApp:bundleID() == "com.apple.finder" then
         hs.osascript.applescript([[
@@ -384,6 +384,7 @@ local function _getTextUnderMouse()
     end
     return nil
 end
+
 Watchers.pickTextTap = hs.eventtap.new({ types.otherMouseDown }, function(e)
     local flags = e:getFlags()
     if not (flags:containExactly({ "cmd" })) then
